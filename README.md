@@ -8,6 +8,7 @@ that are set in the `.env.development` file are present or not.
 
 1. Make sure that you have a `.env.development` file in the root of you project
 2. If some of the varialbles in the `.env.development` are optional, you can create a file called `.env.optional`, variables listed in there will not make the script to fail
+3. Just add this buildpack before any buildpack that might depend on the varialbles being checked
 
 ## Examples
 
