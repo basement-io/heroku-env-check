@@ -1,0 +1,11 @@
+#!/bin/bash
+
+# $1 -> BUILD_DIR 
+
+# this pack is valid for apps with a hello.txt in the root
+if [ -f $1/.env.development ]; then
+  echo "Heroku env check"
+  exit 0
+else
+  exit 1
+fi

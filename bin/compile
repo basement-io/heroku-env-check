@@ -1,0 +1,37 @@
+#!/bin/bash
+
+# $1 -> BUILD_DIR 
+# $2 -> CACHE_DIR
+# $3 -> ENV_DIR
+
+indent() {
+  sed -u 's/^/       /'
+}
+
+# Get the name of the variables that are expected to be present
+variables=($(grep -oE "^\w+(:|=)" $1/.env.development | grep -o -E "\w+"))
+
+can_be_ignored=()
+
+# we can have a list of variables that do not matter for the deploy
+if [[ -f $1/.env.optional ]]; then
+    can_be_ignored=($(grep -oE "^\w+" $1/.env.optional))
+fi
+
+# Get the name of the variables that are set
+present=($(ls $3))
+
+result=0
+
+for var in ${variables[@]}
+do
+    pattern="(^| )${var}( |$)"
+
+    if ! ($(grep -q -E "$pattern" <<< "${present[@]}")) && ! ($(grep -q -E "$pattern" <<< "${can_be_ignored[@]}"));
+    then
+        echo "${var} is not present" | indent
+        result=1
+    fi
+done
+
+exit $result
